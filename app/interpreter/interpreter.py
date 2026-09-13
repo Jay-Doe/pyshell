@@ -1,4 +1,4 @@
-from interpreter.grammar import BUILTINS
+from .grammar import BUILTINS
 from collections.abc import Callable
 from .grammar import Program, Statement, CmdType
 
