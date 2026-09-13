@@ -1,5 +1,55 @@
-from .grammar import Program
+from interpreter.grammar import BUILTINS
+from collections.abc import Callable
+from .grammar import Program, Statement, CmdType
 
-def interpret(statement: list[str]) -> Program:
-    print(f"{statement[0]}: not found")
+type Executor = Callable[[Statement], Program]
+
+def interpret(statement: Statement) -> Program:
+        f = DispatchTable[statement.type]
+        return f(statement)
+
+
+
+
+def exe_not_found(statement: Statement) -> Program:
+    print(f"{statement.cmd}: command not found")
     return Program.LOOP
+
+def exe_builtin(statement: Statement) -> Program:
+    match(statement.cmd):
+        case "exit":
+            return Program.EXIT
+        case _:
+            raise NotImplementedError("Builtin not implemented yet")
+
+
+
+
+
+
+
+
+
+
+
+
+def lex(words: list[str]) -> Statement:
+    if not words:
+        print("no command found")
+        raise Exception("empty input exception")
+
+    cmd, *args = words
+    type = categorize(cmd)
+    return Statement(cmd, type, args)
+
+
+def categorize(cmd: str) -> CmdType:
+    if cmd in BUILTINS:
+        return CmdType.BUILTIN
+    return CmdType.NOT_FOUND
+
+DispatchTable: dict[CmdType, Executor] = {
+    CmdType.BUILTIN : exe_builtin,
+    CmdType.NOT_FOUND: exe_not_found,
+
+}

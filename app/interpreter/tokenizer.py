@@ -1,6 +1,5 @@
 
 
-
 def tokenize(sentence: str) -> list[str]:
-    words = sentence.split(" ")
+    words = sentence.strip().split(" ")
     return words

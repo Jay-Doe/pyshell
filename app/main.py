@@ -1,16 +1,18 @@
 import sys
-from app.interpreter.grammar import Program
+from app.interpreter.grammar import Program, Statement
 from app.interpreter.tokenizer import tokenize
-from app.interpreter.interpreter import interpret
+from app.interpreter.interpreter import interpret, lex
 
 
 def main():
-    shell_state  = Program.LOOP
-    while (shell_state == Program.LOOP ):
+    p  = Program.LOOP
+    while (p == Program.LOOP ):
         sys.stdout.write("$ ")
         sentence =  input()
         words = tokenize(sentence)
-        shell_state = interpret(words)
+        statement: Statement = lex(words)
+        p = interpret(statement)
+
 
 
 
