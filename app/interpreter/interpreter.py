@@ -1,4 +1,4 @@
-from p_domain.exe import find_exe
+from app.p_domain.exe import find_exe
 from .grammar import BUILTINS
 from collections.abc import Callable
 from .grammar import Program, Statement, CmdType
