@@ -1,3 +1,4 @@
+from p_domain.exe import find_exe
 from .grammar import BUILTINS
 from collections.abc import Callable
 from .grammar import Program, Statement, CmdType
@@ -22,18 +23,18 @@ def exe_builtin(statement: Statement) -> Program:
         case "echo":
             print(" ".join(statement.args))
             return Program.LOOP
+        case "type":
+            x = statement.args[0]
+            if x:
+                y = find_exe(x)
+                if y:
+                    print(f"{x}: is a {y}")
+                    Program.LOOP
+            print(f"{x}: not found")
+            return Program.LOOP
+
         case _:
             raise NotImplementedError("Builtin not implemented yet")
-
-
-
-
-
-
-
-
-
-
 
 
 def lex(words: list[str]) -> Statement:
