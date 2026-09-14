@@ -64,6 +64,7 @@ def lex(words: list[str]) -> Statement:
 
     cmd, *args = words
     type = categorize(cmd)
+    path = find_exe(cmd) if type == CmdType.EXE else None
     return Statement(cmd, type, args)
 
 
