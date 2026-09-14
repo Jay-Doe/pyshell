@@ -47,7 +47,7 @@ def exe_bin(statement: Statement) -> Program:
 
     print(f"Program was passed {len(cmd)} args (including program name).")
     for idx, arg in enumerate(cmd):
-        print(f"Arg #{idx}{"( program name)" if idx == 0 else ""}: {arg}")
+        print(f"Arg #{idx}{" (program name)" if idx == 0 else ""}: {arg}")
 
     process = subprocess.Popen(
         cmd,
