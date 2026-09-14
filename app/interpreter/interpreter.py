@@ -56,7 +56,9 @@ def exe_bin(statement: Statement) -> Program:
         text=True,
         bufsize=1,
     )
-    print("Program Signature: " + str(process.pid))
+    if process.stdout is not None:
+        for line in process.stdout:
+            print(line, end="")
     return Program.LOOP
 
 
