@@ -2,7 +2,7 @@ from .context import ShellContext
 from .model import Command, ExecutionResult, Program, ShellContext
 from .resolver import resolve_executable
 
-BUILTINS = ("cd", "exit", "type", "echo")
+BUILTINS = ("pwd", "cd", "exit", "type", "echo")
 
 
 def execute_builtin(command: Command, context: ShellContext) -> ExecutionResult:
