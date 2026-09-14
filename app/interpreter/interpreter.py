@@ -32,7 +32,7 @@ def exe_builtin(statement: Statement) -> Program:
                 y = find_exe(x)
                 if y:
                     print(f"{x} is {y}")
-                    Program.LOOP
+                    return Program.LOOP
             print(f"{x}: not found")
             return Program.LOOP
 
