@@ -19,6 +19,9 @@ def exe_builtin(statement: Statement) -> Program:
     match(statement.cmd):
         case "exit":
             return Program.EXIT
+        case "echo":
+            print(" ".join(statement.args))
+            return Program.LOOP
         case _:
             raise NotImplementedError("Builtin not implemented yet")
 
