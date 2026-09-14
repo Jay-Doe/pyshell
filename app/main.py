@@ -1,20 +1,23 @@
 import sys
-from app.interpreter.grammar import Program, Statement
-from app.interpreter.tokenizer import tokenize
-from app.interpreter.interpreter import interpret, lex
+
+from app.interpreter.context import initial_context
+from app.interpreter.model import Program
+from app.interpreter.parser import parse, tokenize
+from app.interpreter.runtime import execute
 
 
 def main():
-    p  = Program.LOOP
-    while (p == Program.LOOP ):
+    context = initial_context()
+    program = Program.LOOP
+    while program == Program.LOOP:
         sys.stdout.write("$ ")
-        sentence =  input()
+        sentence = input()
         words = tokenize(sentence)
-        statement: Statement = lex(words)
-        p = interpret(statement)
-
-
-
+        command = parse(words)
+        result = execute(command, context)
+        sys.stdout.write(result.output)
+        context = result.context
+        program = result.program
 
 if __name__ == "__main__":
     main()
