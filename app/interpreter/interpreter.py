@@ -70,6 +70,8 @@ def lex(words: list[str]) -> Statement:
 def categorize(cmd: str) -> CmdType:
     if cmd in BUILTINS:
         return CmdType.BUILTIN
+    if find_exe(cmd):
+        return CmdType.EXE
     return CmdType.NOT_FOUND
 
 DispatchTable: dict[CmdType, Executor] = {
