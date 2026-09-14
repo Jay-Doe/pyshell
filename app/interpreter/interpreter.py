@@ -1,3 +1,4 @@
+import subprocess
 from app.p_domain.exe import find_exe
 from .grammar import BUILTINS
 from collections.abc import Callable
@@ -39,6 +40,22 @@ def exe_builtin(statement: Statement) -> Program:
         case _:
             raise NotImplementedError("Builtin not implemented yet")
 
+def exe_bin(statement: Statement) -> Program:
+    if not statement.path:
+        raise AttributeError("An executable statement is missing a path, this should have been caught earlier")
+    cmd  =  [statement.cmd, *statement.args]
+
+    process = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+    )
+    return Program.LOOP
+
+
+
 
 def lex(words: list[str]) -> Statement:
     if not words:
@@ -58,5 +75,6 @@ def categorize(cmd: str) -> CmdType:
 DispatchTable: dict[CmdType, Executor] = {
     CmdType.BUILTIN : exe_builtin,
     CmdType.NOT_FOUND: exe_not_found,
+    CmdType.EXE: exe_bin
 
 }
