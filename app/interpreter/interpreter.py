@@ -25,6 +25,9 @@ def exe_builtin(statement: Statement) -> Program:
             return Program.LOOP
         case "type":
             x = statement.args[0]
+            if x in BUILTINS:
+                print(f"{x} is a shell builtin")
+                return Program.LOOP
             if x:
                 y = find_exe(x)
                 if y:
