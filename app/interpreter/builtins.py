@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from .context import ShellContext
@@ -58,7 +59,8 @@ def cd(cmd: Command, ctx: ShellContext) -> ExecutionResult:
             output="cd: missing argument\n",
         )
     target = cmd.args[0]
-    if Path(target).is_absolute() and Path(target).exists():
+    absolute = Path(target).is_absolute()
+    if  absolute and Path(target).exists():
         ctx = ShellContext(
             cwd=Path(target),
             path=ctx.path,
@@ -67,9 +69,17 @@ def cd(cmd: Command, ctx: ShellContext) -> ExecutionResult:
         return ExecutionResult(context=ctx, program=Program.LOOP, output="")
 
 
+    elif not absolute:
+        maybe_target = os.path.normpath(ctx.cwd / target)
+        if Path(maybe_target).exists():
+            ctx = ShellContext(
+                cwd=Path(maybe_target),
+                path=ctx.path,
+                home=ctx.home,
+            )
+            return ExecutionResult(context=ctx, program=Program.LOOP, output="")
 
-    else:
-        return ExecutionResult(
+    return ExecutionResult(
             context=ctx,
             program=Program.LOOP,
             output=f"cd: {target}: No such file or directory\n",
