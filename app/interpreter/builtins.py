@@ -61,7 +61,7 @@ def cd(cmd: Command, ctx: ShellContext) -> ExecutionResult:
         )
     raw = cmd.args[0]
     path = Path(raw).expanduser()
-    absolute = Path(target).is_absolute()
+    absolute = Path(path).is_absolute()
     if not absolute:
         path = ctx.cwd /path
     path = Path(os.path.normpath(path))
