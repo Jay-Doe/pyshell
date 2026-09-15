@@ -52,6 +52,7 @@ def pwd(cmd: Command, ctx: ShellContext) -> ExecutionResult:
     return ExecutionResult(context=ctx, program=Program.LOOP, output=(str(ctx.cwd)+"\n"))
 
 def cd(cmd: Command, ctx: ShellContext) -> ExecutionResult:
+    
     if len(cmd.args) == 0:
         return ExecutionResult(
             context=ctx,
@@ -59,6 +60,8 @@ def cd(cmd: Command, ctx: ShellContext) -> ExecutionResult:
             output="cd: missing argument\n",
         )
     target = cmd.args[0]
+    if "~" in target:
+        target = Path(target).expanduser()
     absolute = Path(target).is_absolute()
     if  absolute and Path(target).exists():
         ctx = ShellContext(
