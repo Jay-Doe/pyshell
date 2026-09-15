@@ -53,39 +53,32 @@ def pwd(cmd: Command, ctx: ShellContext) -> ExecutionResult:
 
 def cd(cmd: Command, ctx: ShellContext) -> ExecutionResult:
     
-    if len(cmd.args) == 0:
+    if not cmd.args:
         return ExecutionResult(
             context=ctx,
             program=Program.LOOP,
             output="cd: missing argument\n",
         )
-    target = cmd.args[0]
-    if "~" in target:
-        target = Path(target).expanduser()
+    raw = cmd.args[0]
+    path = Path(raw).expanduser()
     absolute = Path(target).is_absolute()
-    if  absolute and Path(target).exists():
-        ctx = ShellContext(
-            cwd=Path(target),
-            path=ctx.path,
-            home=ctx.home,
-        )
-        return ExecutionResult(context=ctx, program=Program.LOOP, output="")
-
-
-    elif not absolute:
-        maybe_target = os.path.normpath(ctx.cwd / target)
-        if Path(maybe_target).exists():
-            ctx = ShellContext(
-                cwd=Path(maybe_target),
+    if not absolute:
+        path = ctx.cwd /path
+    path = Path(os.path.normpath(path))
+    if path.is_dir():
+        return ExecutionResult(
+            context=ShellContext(
+                cwd=path,
                 path=ctx.path,
                 home=ctx.home,
-            )
-            return ExecutionResult(context=ctx, program=Program.LOOP, output="")
-
+            ),
+            program=Program.LOOP,
+        )
+                
     return ExecutionResult(
             context=ctx,
             program=Program.LOOP,
-            output=f"cd: {target}: No such file or directory\n",
+            output=f"cd: {raw}: No such file or directory\n",
         )
 
 
