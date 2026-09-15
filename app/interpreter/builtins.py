@@ -41,6 +41,8 @@ def execute_builtin(command: Command, context: ShellContext) -> ExecutionResult:
             )
         case "pwd":
             return pwd(command, context)
+        case "cd":
+            return cd(command, context)
         case _:
             raise NotImplementedError("Builtin not implemented yet")
 
