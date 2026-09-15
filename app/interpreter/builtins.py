@@ -1,5 +1,7 @@
+from pathlib import Path
+
 from .context import ShellContext
-from .model import Command, ExecutionResult, Program, ShellContext
+from .model import Command, ExecutionResult, Program
 from .resolver import resolve_executable
 
 BUILTINS = ("pwd", "cd", "exit", "type", "echo")
@@ -45,3 +47,30 @@ def execute_builtin(command: Command, context: ShellContext) -> ExecutionResult:
 def pwd(cmd: Command, ctx: ShellContext) -> ExecutionResult:
 
     return ExecutionResult(context=ctx, program=Program.LOOP, output=(str(ctx.cwd)+"\n"))
+
+def cd(cmd: Command, ctx: ShellContext) -> ExecutionResult:
+    if len(cmd.args) == 0:
+        return ExecutionResult(
+            context=ctx,
+            program=Program.LOOP,
+            output="cd: missing argument\n",
+        )
+    target = cmd.args[0]
+    if Path(target).is_absolute() and Path(target).exists():
+        ctx = ShellContext(
+            cwd=Path(target),
+            path=ctx.path,
+            home=ctx.home,
+        )
+        return ExecutionResult(context=ctx, program=Program.LOOP, output="")
+
+
+
+    else:
+        return ExecutionResult(
+            context=ctx,
+            program=Program.LOOP,
+            output=f"cd: {target}: No such file or directory\n",
+        )
+
+
